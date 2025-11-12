@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Filament\Resources\Lessons;
+
+use App\Filament\Resources\Lessons\Pages\CreateLesson;
+use App\Filament\Resources\Lessons\Pages\EditLesson;
+use App\Filament\Resources\Lessons\Pages\ListLessons;
+use App\Filament\Resources\Lessons\Schemas\LessonForm;
+use App\Filament\Resources\Lessons\Tables\LessonsTable;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class LessonResource extends Resource
+{
+    protected static string|null|\UnitEnum $navigationGroup = 'Освіта';
+    protected static ?string $navigationLabel = 'Лекції';
+    protected static ?string $pluralLabel = 'Лекції';
+    protected static ?string $modelLabel = 'Лекцію';
+    protected static ?int $navigationSort = 10;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+
+    public static function form(Schema $schema): Schema
+    {
+        return LessonForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return LessonsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListLessons::route('/'),
+            'create' => CreateLesson::route('/create'),
+            'edit' => EditLesson::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+}
