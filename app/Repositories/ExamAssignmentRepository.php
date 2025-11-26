@@ -12,6 +12,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use App\Repositories\Sorts\RelatedSort;
+use Illuminate\Database\Eloquent\Builder;
 
 readonly class ExamAssignmentRepository extends AbstractRepository implements ExamAssignmentRepositoryInterface
 {
@@ -22,16 +25,30 @@ readonly class ExamAssignmentRepository extends AbstractRepository implements Ex
             AllowedFilter::partial('group.name'),
             AllowedFilter::partial('user.name'),
             AllowedFilter::partial('user.email'),
+            AllowedFilter::exact('resultStatus.slug'),
+            AllowedFilter::callback('start_date', function (Builder $query, $value) {
+                $query->where('end_at', '>=', $value);
+            }),
+            AllowedFilter::callback('end_date', function (Builder $query, $value) {
+                $query->where('end_at', '<=', $value);
+            }),
+            AllowedFilter::callback('global', function (Builder $query, $value) {
+                $query->where(function (Builder $query) use ($value) {
+                    $query->whereHas('user', fn(Builder $q) => $q->where('name', 'like', "%{$value}%"))
+                        ->orWhereHas('exam', fn(Builder $q) => $q->where('title', 'like', "%{$value}%"))
+                        ->orWhereHas('group', fn(Builder $q) => $q->where('name', 'like', "%{$value}%"));
+                });
+            }),
         ];
     }
 
     public function getAllowedSorts(): array
     {
         return [
-            'user.name',
-            'user.email',
-            'exam.title',
-            'group.name',
+            AllowedSort::custom('user.name', new RelatedSort('user', 'name')),
+            AllowedSort::custom('user.email', new RelatedSort('user', 'email')),
+            AllowedSort::custom('exam.title', new RelatedSort('exam', 'title')),
+            AllowedSort::custom('group.name', new RelatedSort('group', 'name')),
             'end_at',
             'created_at',
         ];
