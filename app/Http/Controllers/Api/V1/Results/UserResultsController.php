@@ -19,7 +19,6 @@ class UserResultsController extends Controller
         $user = auth()->user();
         $organizationId = $user->hasRole(RoleEnum::ADMIN) && $all ? auth()->user()->organization_id : null;
         $results = $action->execute(PaginateDTO::fromRequest($request), $user->id, $organizationId);
-
         return ExamAssigmentResource::collection($results);
     }
 

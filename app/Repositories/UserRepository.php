@@ -11,9 +11,29 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\QueryBuilder\AllowedFilter;
 
 readonly class UserRepository extends AbstractRepository implements UserRepositoryInterface
 {
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('email'),
+        ];
+    }
+
+    public function getAllowedSorts(): array
+    {
+        return [
+            'id',
+            'name',
+            'email',
+            'rank',
+            'created_at',
+        ];
+    }
     public function getModel(): Model
     {
         return new User();

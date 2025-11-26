@@ -147,4 +147,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Group::class, 'user_group_invites')->withPivot(['invited_at', 'accepted_at']);
     }
+
+    /**
+     * Send the email verification notification.
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new \App\Notifications\VerifyEmail);
+    }
 }

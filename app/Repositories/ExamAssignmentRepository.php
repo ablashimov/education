@@ -11,9 +11,32 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Spatie\QueryBuilder\AllowedFilter;
 
 readonly class ExamAssignmentRepository extends AbstractRepository implements ExamAssignmentRepositoryInterface
 {
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::partial('exam.title'),
+            AllowedFilter::partial('group.name'),
+            AllowedFilter::partial('user.name'),
+            AllowedFilter::partial('user.email'),
+        ];
+    }
+
+    public function getAllowedSorts(): array
+    {
+        return [
+            'user.name',
+            'user.email',
+            'exam.title',
+            'group.name',
+            'end_at',
+            'created_at',
+        ];
+    }
+
     public function getModel(): Model
     {
         return new ExamAssignment();

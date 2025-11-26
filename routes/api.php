@@ -18,6 +18,8 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink']);
     Route::post('/reset-password', [ForgotPasswordController::class, 'reset']);
+    Route::post('/email/verification-notification', [AuthController::class, 'sendEmailVerification']);
+    Route::post('/email/verify', [AuthController::class, 'verifyEmail']);
 
     Route::middleware(['auth:sanctum', 'organization'])->group(function () {
         Route::get('/user', [UserController::class, 'authUser']);

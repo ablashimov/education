@@ -31,14 +31,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
-//            ->navigationGroups([
-//                __('Vehicles'),
-//                __('Devices'),
-//                __('Device options'),
-//                __('Units'),
-//                __('Users'),
-//                __('Roles & Permissions'),
-//            ])
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->middleware([

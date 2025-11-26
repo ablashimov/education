@@ -7,12 +7,15 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\VerifyUserEmailRequest;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Throwable;
 
@@ -101,5 +104,61 @@ class AuthController extends Controller
         }
 
         return response()->json(__('User was successfully logout'));
+    }
+
+    public function sendEmailVerification(Request $request): JsonResponse
+    {
+        $user = Auth::guard('sanctum')->user();
+
+        if (! $user) {
+            return response()->json(__('auth.failed'), SymfonyResponse::HTTP_UNAUTHORIZED);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified'], 200);
+        }
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Verification email sent']);
+    }
+
+    public function verifyEmail(Request $request): JsonResponse
+    {
+        $user = Auth::guard('sanctum')->user();
+
+        if (! $user) {
+            return response()->json(__('auth.failed'), SymfonyResponse::HTTP_UNAUTHORIZED);
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified'], 200);
+        }
+
+        $request->validate([
+            'id' => 'required|integer',
+            'hash' => 'required|string',
+        ]);
+
+        $id = $request->input('id');
+        $hash = $request->input('hash');
+
+        if ($id != $user->id) {
+            return response()->json(['message' => 'Invalid verification link'], 400);
+        }
+
+        if (! hash_equals((string) $user->getKey(), (string) $id)) {
+            return response()->json(['message' => 'Invalid verification link'], 400);
+        }
+
+        if (! hash_equals(sha1($user->getEmailForVerification()), $hash)) {
+            return response()->json(['message' => 'Invalid verification link'], 400);
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return response()->json(['message' => 'Email verified successfully']);
     }
 }
