@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Observers\UserGroupInviteObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserGroupInvite whereUserId($value)
  * @mixin \Eloquent
  */
+#[ObservedBy([UserGroupInviteObserver::class])]
 class UserGroupInvite extends Model
 {
     public $timestamps = false;

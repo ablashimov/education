@@ -63,7 +63,6 @@ class AuthController extends Controller
                     );
                 }
 
-                setPermissionsTeamId($organization->id);
                 $user->load(['roles', 'permissions']);
 
                 $request->session()->regenerate();

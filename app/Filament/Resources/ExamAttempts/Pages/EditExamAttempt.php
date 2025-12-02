@@ -22,4 +22,20 @@ class EditExamAttempt extends EditRecord
             RestoreAction::make(),
         ];
     }
+
+    protected function afterSave(): void
+    {
+        $record = $this->getRecord();
+
+        $totalScore = 0;
+        $record->load('answers.question');
+
+        foreach ($record->answers as $answer) {
+            if ($answer->is_correct) {
+                $totalScore += $answer->question->score ?? 0;
+            }
+        }
+
+        $record->update(['score' => $totalScore]);
+    }
 }

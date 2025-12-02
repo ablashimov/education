@@ -31,8 +31,6 @@ class OrganizationMiddleware
             return response()->json(['message' => $message], SymfonyResponse::HTTP_UNAUTHORIZED);
         }
 
-        setPermissionsTeamId($user->organization_id);
-
         return $next($request);
     }
 }

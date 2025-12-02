@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\Group\Exam\ExamController;
 use App\Http\Controllers\Api\V1\Group\Exam\ExamStatusController;
 use App\Http\Controllers\Api\V1\Results\UserResultsController;
 use App\Http\Controllers\Api\V1\User\UserController;
+use App\Http\Controllers\NotificationController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,13 @@ Route::prefix('v1')->group(function () {
         Route::prefix('exams')->group(function () {
             Route::get('/', [ExamController::class, 'index']);
             Route::get('statuses', [ExamStatusController::class, 'index']);
+        });
+
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [NotificationController::class, 'index']);
+            Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
+            Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
+            Route::put('/read-all', [NotificationController::class, 'markAllAsRead']);
         });
     });
 

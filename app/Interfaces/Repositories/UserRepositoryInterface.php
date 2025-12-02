@@ -16,4 +16,6 @@ interface UserRepositoryInterface extends RepositoryInterface
     public function getGroupUsers(int $groupId): Collection;
 
     public function getForInvites(PaginateDTO $dto, int $groupId);
+
+    public function getAdmins(): Collection;
 }

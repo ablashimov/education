@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ExamController extends Controller
 {
-       public function index(GetUserGroupAssignedExams $action): AnonymousResourceCollection
+    public function index(GetUserGroupAssignedExams $action): AnonymousResourceCollection
     {
         $exams = $action->execute(auth()->user()->id);
 

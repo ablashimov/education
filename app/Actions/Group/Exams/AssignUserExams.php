@@ -3,6 +3,7 @@
 namespace App\Actions\Group\Exams;
 
 use App\Enums\ExamResultStatusEnum;
+use App\Events\NewExamAvailable;
 use App\Interfaces\Repositories\ExamResultStatusRepositoryInterface;
 use App\Interfaces\Repositories\ExamAssignmentRepositoryInterface;
 use App\Interfaces\Repositories\UserRepositoryInterface;
@@ -38,6 +39,7 @@ readonly class AssignUserExams
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ];
+                $user->notify(new NewExamAvailable($examSchedule->exam, $user->id));
             }
             $this->repository->insert($data);
         });

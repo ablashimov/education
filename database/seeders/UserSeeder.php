@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $organization = Organization::first();
-        setPermissionsTeamId($organization->id);
         $statuses = Status::whereIn('slug', [StatusEnum::ACTIVE, StatusEnum::INACTIVE, StatusEnum::VERIFICATION])
             ->get();
         $users = [
@@ -67,6 +66,5 @@ class UserSeeder extends Seeder
                 $createdUser->syncRoles($user['roles']);
             }
         }
-        setPermissionsTeamId(null);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\Role;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -45,6 +46,18 @@ class UserForm
                     ->default('{}'),
                 DateTimePicker::make('last_login_at')
                     ->label('Останній вхід'),
+                Select::make('role_id')
+                    ->label(__('Role'))
+                    ->options(function (callable $get) {
+                        return Role::query()->pluck('title', 'id');
+                    })
+                    ->required()
+                    ->preload()
+                    ->searchable()
+                    ->afterStateHydrated(function ($set, $record) {
+                        setPermissionsTeamId($record->organization_id);
+                        $set('role_id', $record?->roles()->pluck('id')->first());
+                    }),
             ]);
     }
 }

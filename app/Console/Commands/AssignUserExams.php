@@ -13,9 +13,6 @@ class AssignUserExams extends Command
 
     protected $description = 'Command description';
 
-    /**
-     * Execute the console command.
-     */
     public function handle(AssignUserExamsAaction $action, GetScheduledExams $getScheduledExams)
     {
         $schedules = $getScheduledExams->execute(Carbon::now());
