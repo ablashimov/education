@@ -102,6 +102,9 @@ class AuthController extends Controller
             $user->currentAccessToken()->delete();
         }
 
+        session()->invalidate();
+        session()->regenerateToken();
+
         return response()->json(__('User was successfully logout'));
     }
 

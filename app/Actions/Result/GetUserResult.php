@@ -11,8 +11,8 @@ readonly class GetUserResult
     {
     }
 
-    public function execute(int $assignedExamId, int $userId): ExamAssignment
+    public function execute(int $assignedExamId, int $userId, ?int $adminOrganizationId = null): ExamAssignment
     {
-        return $this->repository->getResult($assignedExamId, $userId);
+        return $this->repository->getResult($assignedExamId, $userId, $adminOrganizationId);
     }
 }

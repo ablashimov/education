@@ -41,7 +41,7 @@ class QuestionsRelationManager extends RelationManager
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('text')->label('Текст')->limit(60)->wrap()->searchable(),
-                TextColumn::make('pivot.choices')->label('Варіанти'),
+//                TextColumn::make('pivot.choices')->label('Варіанти'),
                 TextColumn::make('type.name')->label('Тип')->sortable(),
             ])
             ->filters([

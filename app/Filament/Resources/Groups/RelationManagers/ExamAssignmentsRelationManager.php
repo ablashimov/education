@@ -68,9 +68,10 @@ class ExamAssignmentsRelationManager extends RelationManager
                 TextInput::make('attempts_allowed')
                     ->label('К-сть спроб')->numeric()->required(),
                 Toggle::make('is_control')
+                    ->label('Контрольний тест')
                     ->required(),
-                DateTimePicker::make('start_at'),
-                DateTimePicker::make('end_at'),
+                DateTimePicker::make('start_at')->label("Дата початку"),
+                DateTimePicker::make('end_at')->label("Дата закінчення"),
             ]);
     }
 
@@ -80,16 +81,21 @@ class ExamAssignmentsRelationManager extends RelationManager
             ->recordTitleAttribute('user.name')
             ->columns([
                 TextColumn::make('exam.title')
+                    ->label('Назва екзамену')
                     ->searchable(),
                 TextColumn::make('user.name')
+                    ->label('Користувач')
                     ->searchable(),
                 TextColumn::make('exam_result_status_id')
+                    ->label('Статус здачі екзамену')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('attempts_allowed')
+                    ->label('К-сть спроб')
                     ->numeric()
                     ->sortable(),
                 IconColumn::make('is_control')
+                    ->label('Контрольний тест')
                     ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -104,9 +110,11 @@ class ExamAssignmentsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('start_at')
+                    ->label("Дата початку")
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('end_at')
+                    ->label("Дата закінчення")
                     ->dateTime()
                     ->sortable(),
             ])

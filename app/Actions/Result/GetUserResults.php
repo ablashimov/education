@@ -5,7 +5,6 @@ namespace App\Actions\Result;
 use App\DTO\PaginateDTO;
 use App\Interfaces\Repositories\ExamAssignmentRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 readonly class GetUserResults
 {
@@ -13,8 +12,8 @@ readonly class GetUserResults
     {
     }
 
-    public function execute(PaginateDTO $dto, int $userId, ?int $organizationId = null): LengthAwarePaginator
+    public function execute(PaginateDTO $dto, bool $allResults): LengthAwarePaginator
     {
-        return $this->repository->getResults($dto, $userId, $organizationId);
+        return $this->repository->getResults($dto, $allResults);
     }
 }

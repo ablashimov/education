@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\Group\Exam\ExamStatusController;
 use App\Http\Controllers\Api\V1\Results\UserResultsController;
 use App\Http\Controllers\Api\V1\User\UserController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Api\V1\Forum\ForumController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,16 @@ Route::prefix('v1')->group(function () {
             Route::get('/unread-count', [NotificationController::class, 'unreadCount']);
             Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
             Route::put('/read-all', [NotificationController::class, 'markAllAsRead']);
+        });
+
+        Route::prefix('forum')->group(function () {
+            Route::get('categories', [ForumController::class, 'categories']);
+            Route::get('topics', [ForumController::class, 'index']);
+            Route::post('topics', [ForumController::class, 'store']);
+            Route::get('topics/{id}', [ForumController::class, 'show']);
+            Route::post('topics/{id}/reply', [ForumController::class, 'reply']);
+            Route::post('like', [ForumController::class, 'like']);
+            Route::post('topics/{topicId}/posts/{postId}/resolve', [ForumController::class, 'resolve']);
         });
     });
 

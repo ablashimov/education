@@ -65,7 +65,6 @@ readonly class UserRepository extends AbstractRepository implements UserReposito
             ->select('users.*')
             ->join('user_groups', 'user_groups.user_id', '=', 'users.id')
             ->where('user_groups.group_id', $groupId)
-            ->organization()
             ->get();
     }
 

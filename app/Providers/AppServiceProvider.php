@@ -29,9 +29,8 @@ class AppServiceProvider extends ServiceProvider
         if (! app()->isLocal()) {
             URL::forceScheme('https');
         }
-//        Route::bind('assignedExam', function ($assignedExam) {
-//
-//        });
+
+        Carbon::setLocale(config('app.locale'));
     }
 
     private function registerAliases(): void

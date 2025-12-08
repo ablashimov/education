@@ -55,7 +55,6 @@ class UserForm
                     ->preload()
                     ->searchable()
                     ->afterStateHydrated(function ($set, $record) {
-                        setPermissionsTeamId($record->organization_id);
                         $set('role_id', $record?->roles()->pluck('id')->first());
                     }),
             ]);

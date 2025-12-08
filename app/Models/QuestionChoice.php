@@ -43,6 +43,7 @@ class QuestionChoice extends Model
         'question_id',
         'text',
         'correct',
+        'scoring'
     ];
 
     protected $casts = [

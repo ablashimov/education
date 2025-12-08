@@ -125,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeOrganization(Builder $query): void
     {
-        $query->where('organization_id', getPermissionsTeamId());
+        $query->where('organization_id', auth()->user()->organization_id);
     }
 
     public function organization(): BelongsTo

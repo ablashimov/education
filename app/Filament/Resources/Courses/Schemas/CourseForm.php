@@ -19,8 +19,7 @@ class CourseForm
                     ->required(),
                 TextInput::make('slug')
                     ->label('Слаг')
-                    ->maxValue(255)
-                    ->required(),
+                    ->maxValue(255),
                 Toggle::make('is_available')
                     ->label('Доступний'),
                 KeyValue::make('settings')

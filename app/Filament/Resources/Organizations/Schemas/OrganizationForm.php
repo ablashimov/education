@@ -18,7 +18,6 @@ class OrganizationForm
                     ->required(),
                 TextInput::make('slug')
                     ->label('Слаг')
-                    ->required()
                     ->unique('organizations', 'slug'),
                 KeyValue::make('settings')
                     ->label('Налаштування')

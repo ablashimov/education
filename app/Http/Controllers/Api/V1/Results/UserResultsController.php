@@ -17,14 +17,17 @@ class UserResultsController extends Controller
     {
         $all = $request->get('all');
         $user = auth()->user();
-        $organizationId = $user->hasRole(RoleEnum::ADMIN) && $all ? auth()->user()->organization_id : null;
-        $results = $action->execute(PaginateDTO::fromRequest($request), $user->id, $organizationId);
+        $allResults = $user->hasRole(RoleEnum::ADMIN) && $all;
+        $results = $action->execute(PaginateDTO::fromRequest($request), $allResults);
+
         return ExamAssigmentResource::collection($results);
     }
 
     public function show(int $assignedExamId, GetUserResult $action): ExamAssigmentResource
     {
-        $result = $action->execute($assignedExamId, auth()->user()->id);
+        $user = auth()->user();
+        $organizationId = $user->hasRole(RoleEnum::ADMIN) ? $user->organization_id : null;
+        $result = $action->execute($assignedExamId, $user->id, $organizationId);
 
         return ExamAssigmentResource::make($result);
     }

@@ -28,13 +28,9 @@ readonly class SaveAttemptAnswers
     ) {
     }
 
-    public function execute(AnswersDTO $dto): ExamAttempt
+    public function execute(AnswersDTO $dto, ExamInstance $examInstance): ExamAttempt
     {
-        /** @var ExamInstance $examInstance */
-        $examInstance = $this->examInstanceRepository->getById(
-            $dto->examInstanceId,
-            ['questions.type', 'questions.choices', 'assignment.exam']
-        );
+        $examInstance->load(['questions.type', 'questions.choices', 'assignment.exam']);
         $results = [];
         $needGrade = false;
         $score = 0;

@@ -16,6 +16,10 @@ use App\Interfaces\Repositories\RoleRepositoryInterface;
 use App\Interfaces\Repositories\StatusRepositoryInterface;
 use App\Interfaces\Repositories\ExamAssignmentRepositoryInterface;
 use App\Interfaces\Repositories\UserRepositoryInterface;
+use App\Interfaces\Repositories\ForumCategoryRepositoryInterface;
+use App\Interfaces\Repositories\ForumTopicRepositoryInterface;
+use App\Interfaces\Repositories\ForumPostRepositoryInterface;
+use App\Interfaces\Repositories\ForumLikeRepositoryInterface;
 use App\Repositories\AnswerRepository;
 use App\Repositories\AttemptRepository;
 use App\Repositories\ExamInstanceRepository;
@@ -30,6 +34,10 @@ use App\Repositories\RoleRepository;
 use App\Repositories\StatusRepository;
 use App\Repositories\ExamAssignmentRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\ForumCategoryRepository;
+use App\Repositories\ForumTopicRepository;
+use App\Repositories\ForumPostRepository;
+use App\Repositories\ForumLikeRepository;
 use Illuminate\Support\ServiceProvider;
 
 class BindServiceProvider extends ServiceProvider
@@ -69,5 +77,9 @@ class BindServiceProvider extends ServiceProvider
         $this->app->singleton(LessonRepositoryInterface::class, LessonRepository::class);
         $this->app->singleton(AttemptRepositoryInterface::class, AttemptRepository::class);
         $this->app->singleton(AnswerRepositoryInterface::class, AnswerRepository::class);
+        $this->app->singleton(ForumCategoryRepositoryInterface::class, ForumCategoryRepository::class);
+        $this->app->singleton(ForumTopicRepositoryInterface::class, ForumTopicRepository::class);
+        $this->app->singleton(ForumPostRepositoryInterface::class, ForumPostRepository::class);
+        $this->app->singleton(ForumLikeRepositoryInterface::class, ForumLikeRepository::class);
     }
 }

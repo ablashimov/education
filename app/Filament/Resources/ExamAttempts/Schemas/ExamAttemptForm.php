@@ -7,6 +7,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Placeholder;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -18,9 +19,6 @@ class ExamAttemptForm
             ->components([
                 Section::make('Info')
                     ->schema([
-                        TextInput::make('exam_instance_id')
-                            ->required()
-                            ->numeric(),
                         DateTimePicker::make('started_at')
                             ->label('Дата початку спроби')
                             ->required(),
@@ -36,6 +34,8 @@ class ExamAttemptForm
                             ->numeric(),
                         TextInput::make('graded_by')
                             ->label('Оцінювач')
+                            ->disabled()
+                            ->default(auth()->user()->id)
                             ->numeric(),
                         TextInput::make('client_info')
                             ->label('Інформація про пристрій')
@@ -43,19 +43,19 @@ class ExamAttemptForm
                         TextInput::make('ip')
                             ->required(),
                     ])->columns(2),
-                Section::make('Answers')
+                Section::make('Відповіді')
                     ->schema([
                         Repeater::make('answers')
+                            ->label('Відповіді')
                             ->relationship()
                             ->schema([
-                                Placeholder::make('question_text')
-                                    ->label('Question')
-                                    ->content(fn ($record) => $record?->question?->text),
+                                TextEntry::make('question.text')
+                                    ->label('Запитання'),
                                 TextInput::make('answer')
-                                    ->label('User Answer')
+                                    ->label('Відповідь')
                                     ->disabled(),
                                 Toggle::make('is_correct')
-                                    ->label('Correct'),
+                                    ->label('Чи правильна відповідь'),
                             ])
                             ->addable(false)
                             ->deletable(false)

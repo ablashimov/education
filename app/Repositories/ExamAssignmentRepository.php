@@ -7,14 +7,14 @@ namespace App\Repositories;
 use App\DTO\PaginateDTO;
 use App\Interfaces\Repositories\ExamAssignmentRepositoryInterface;
 use App\Models\ExamAssignment;
+use App\Repositories\Sorts\RelatedSort;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedSort;
-use App\Repositories\Sorts\RelatedSort;
-use Illuminate\Database\Eloquent\Builder;
 
 readonly class ExamAssignmentRepository extends AbstractRepository implements ExamAssignmentRepositoryInterface
 {
@@ -56,7 +56,7 @@ readonly class ExamAssignmentRepository extends AbstractRepository implements Ex
 
     public function getModel(): Model
     {
-        return new ExamAssignment();
+        return new ExamAssignment;
     }
 
     public function getUserExam(int $groupId, int $assignedExamId, int $userId, array $with = []): ExamAssignment
@@ -76,25 +76,27 @@ readonly class ExamAssignmentRepository extends AbstractRepository implements Ex
             ->when($groupId, fn($q) => $q->where('group_id', $groupId))
             ->where('user_id', $userId)
 //            ->where('start_at', '>=', Carbon::now())
-//            ->where('end_at', '<=', Carbon::now())
+            ->where('end_at', '>=', Carbon::now())
             ->get();
     }
 
-    public function getResults(PaginateDTO $dto, int $userId, ?int $organizationId = null): LengthAwarePaginator
+    public function getResults(PaginateDTO $dto, bool $allResults): LengthAwarePaginator
     {
         $with = ['exam', 'group', 'resultStatus', 'attempts'];
-        if ($organizationId) {
+        if ($allResults) {
             $with[] = 'user';
         }
         $query = $this->getQuery()
             ->with($with);
 
-        if ($organizationId) {
-            $query->whereHas('user', function ($query) use ($organizationId) {
-                $query->where('users.organization_id', $organizationId);
-            });
+        $query->whereHas('user', function ($query) use ($dto) {
+            $query->where('users.organization_id', $dto->organizationId);
+        });
+
+        if ($allResults) {
+            $query->where('user_id', '!=', $dto->userId);
         } else {
-            $query->where('user_id', $userId);
+            $query->where('user_id', $dto->userId);
         }
 
         $perPage = $dto->perPage;
@@ -104,12 +106,20 @@ readonly class ExamAssignmentRepository extends AbstractRepository implements Ex
         return $query->paginate($perPage, ['*'], 'page', $dto->page);
     }
 
-    public function getResult(int $assignedExamId, int $userId): ExamAssignment
+    public function getResult(int $assignedExamId, int $userId, ?int $adminOrganizationId = null): ExamAssignment
     {
-        return $this->getQuery()
+        $query = $this->getQuery()
             ->with(['exam', 'group', 'resultStatus', 'attempts', 'instances.attempt.answers'])
-            ->where('id', $assignedExamId)
-            ->where('user_id', $userId)
-            ->firstOrFail();
+            ->where('id', $assignedExamId);
+
+        if ($adminOrganizationId) {
+            $query->whereHas('user', function ($query) use ($adminOrganizationId) {
+                $query->where('organization_id', $adminOrganizationId);
+            });
+        } else {
+            $query->where('user_id', $userId);
+        }
+
+        return $query->firstOrFail();
     }
 }

@@ -14,7 +14,7 @@ interface ExamAssignmentRepositoryInterface extends RepositoryInterface
     public function getUserExam(int $groupId, int $assignedExamId, int $userId, array $with = []): ExamAssignment;
 
     public function getUserExams(int $userId, ?int $groupId = null, array $with = []): Collection;
-    public function getResults(PaginateDTO $dto, int $userId, ?int $organizationId = null): LengthAwarePaginator;
+    public function getResults(PaginateDTO $dto, bool $allResults): LengthAwarePaginator;
 
-    public function getResult(int $assignedExamId, int $userId);
+    public function getResult(int $assignedExamId, int $userId, ?int $adminOrganizationId = null);
 }

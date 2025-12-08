@@ -17,17 +17,22 @@ class ExamInstancesTable
     {
         return $table
             ->columns([
-                TextColumn::make('assignment.id')
+                TextColumn::make('assignment.exam.title')
+                    ->label('Назва екзамену')
                     ->searchable(),
                 TextColumn::make('user.name')
+                    ->label('Користувач')
                     ->searchable(),
                 TextColumn::make('attempt_number')
+                    ->label('Спроба')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('start_at')
+                    ->label('Дата початку')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('end_at')
+                    ->label('Дата закінчення')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
