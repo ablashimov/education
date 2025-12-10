@@ -8,19 +8,6 @@ services:
         volumes:
             - .:/app
             - vendor:/app/vendor
-        labels:
-          - "traefik.enable=true"
-#          - "traefik.http.routers.laravel.rule=Host(`education.local`) && (PathPrefix(`/api`) || Path(`/sanctum/csrf-cookie`) || PathPrefix(`/admin`))"
-          - "traefik.http.routers.laravel.rule=Host(`education.local`)"
-          - "traefik.http.routers.laravel.entrypoints=web"
-          - "traefik.http.routers.laravel.priority=30"
-          - "traefik.http.services.laravel.loadbalancer.server.port=8000"
-#            - "traefik.enable=true"
-#            - "traefik.http.routers.laravel.rule=Host(`education.local`)"
-#            - "traefik.http.routers.laravel.rule=Host(`education.local`) && (PathPrefix(`/api`) || Path(`/sanctum/csrf-cookie`))"
-#            - "traefik.http.routers.laravel.priority=20"
-#            - "traefik.http.routers.laravel.entrypoints=web"
-#            - "traefik.http.services.laravel.loadbalancer.server.port=8000"
         user: "${UID}:${GID}"
         networks:
             - app-network
@@ -31,40 +18,6 @@ services:
                 condition: service_healthy
             redis:
                 condition: service_started
-
-    front:
-      image: node:20
-      working_dir: /app
-      volumes:
-        - ./frontend:/app
-        - /app/node_modules
-      command: sh -c "npm ci && npm run dev -- --host 0.0.0.0 --port 3000"
-      ports:
-        - "3000:3000" # optional
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.vite.rule=Host(`education.local`)"
-        - "traefik.http.routers.vite.entrypoints=web"
-        - "traefik.http.routers.vite.priority=10"
-        - "traefik.http.services.vite.loadbalancer.server.port=3000"
-      networks:
-        - app-network
-    traefik:
-        image: traefik:v3.2
-        command:
-            - "--log.level=DEBUG"
-            - "--api.insecure=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedbydefault=false"
-            - "--entryPoints.web.address=:80"
-        ports:
-            - "80:80"
-            - "444:443"
-            - ${TRAEFIC_PORT_HTTP:-8081}:8080
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            - app-network
     db:
         image: postgres:17
         restart: always
@@ -88,11 +41,6 @@ services:
         restart: unless-stopped
         env_file:
             - ./.env
-        labels:
-            - "traefik.enable=true"
-            - "traefik.http.routers.soketi-http.rule=Host(`soketi.dev`)"
-            - "traefik.http.routers.soketi-http.entrypoints=web"
-            - "traefik.http.services.soketi-http.loadbalancer.server.port=6001"
         ports:
             - ${SOKETI_PORT:-6001}:6001
             - ${SOKETI_METRICS_SERVER_PORT:-9601}:9601
