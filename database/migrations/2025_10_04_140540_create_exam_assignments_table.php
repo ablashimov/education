@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('user_id')->index()->constrained()->cascadeOnDelete();
             $table->foreignId('exam_result_status_id')->nullable()->index()->constrained()->nullOnDelete();
             $table->integer('attempts_allowed');
-            $table->timestampsTz('start_at');
-            $table->timestampsTz('end_at');
+            $table->timestampTz('start_at');
+            $table->timestampTz('end_at');
             $table->boolean('is_control');
             $table->unique(['exam_id', 'group_id', 'user_id']);
             $table->timestampsTz();

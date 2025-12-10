@@ -21,7 +21,8 @@ class ExamSeeder extends Seeder
                 'title' => 'Тест з охорони праці посадових осіб',
                 'description' => 'Підсумковий тест з охорони праці для керівників',
                 'attempts_allowed' => 3,
-                'time_limit' => 60, // хвилини
+                'time_limit' => 60,
+                'pass_score' => 25,
                 'config' => [
                     'passing_score' => 70,
                     'show_results' => true,
@@ -33,6 +34,7 @@ class ExamSeeder extends Seeder
                 'description' => 'Тестування знань правил безпечної експлуатації електроустановок',
                 'attempts_allowed' => 2,
                 'time_limit' => 45,
+                'pass_score' => 25,
                 'config' => [
                     'passing_score' => 80,
                     'show_results' => true,
@@ -53,6 +55,7 @@ class ExamSeeder extends Seeder
                 'attempts_allowed' => $examData['attempts_allowed'],
                 'time_limit' => $examData['time_limit'],
                 'config' => $examData['config'],
+                'pass_score' => $examData['pass_score'],
             ]);
 
             // Прив'язати випадкові питання до екзамену
